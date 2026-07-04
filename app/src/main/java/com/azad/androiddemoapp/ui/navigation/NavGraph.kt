@@ -7,10 +7,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.azad.androiddemoapp.domain.model.Article
+import androidx.compose.foundation.layout.padding
 import com.azad.androiddemoapp.ui.favorite.FavoriteScreen
 import com.azad.androiddemoapp.ui.home.HomeScreen
 import com.azad.androiddemoapp.ui.profile.ProfileScreen
 import com.azad.androiddemoapp.ui.search.SearchScreen
+import com.azad.androiddemoapp.ui.detail.NewsDetailScreen
 
 @Composable
 fun NavGraph(
@@ -43,7 +45,14 @@ fun NavGraph(
             )
         }
         composable(Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(
+                modifier = Modifier.padding(contentPadding)
+            )
+        }
+        composable(Screen.NewsDetail.route) {
+            NewsDetailScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }

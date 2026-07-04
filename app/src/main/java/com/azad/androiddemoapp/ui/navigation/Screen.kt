@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -12,4 +13,10 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Search : Screen("search", "Search", Icons.Default.Search)
     object Favorites : Screen("favorites", "Favorites", Icons.Default.Favorite)
     object Profile : Screen("profile", "Profile", Icons.Default.Person)
+    object NewsDetail : Screen("newsDetail/{articleJson}", "News Detail", Icons.Default.Info) {
+        fun createRoute(article: com.azad.androiddemoapp.domain.model.Article): String {
+            val json = com.google.gson.Gson().toJson(article)
+            return "newsDetail/${android.net.Uri.encode(json)}"
+        }
+    }
 }

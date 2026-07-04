@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -81,6 +82,7 @@ fun SearchScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(top = 8.dp)
     ) {
         // Search text field
@@ -170,7 +172,9 @@ fun SearchScreen(
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = contentPadding
+                        contentPadding = PaddingValues(
+                            bottom = contentPadding.calculateBottomPadding()
+                        )
                     ) {
                         items(history) { historyQuery ->
                             Row(
@@ -241,7 +245,9 @@ fun SearchScreen(
                     // Shimmer loader
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = contentPadding
+                        contentPadding = PaddingValues(
+                            bottom = contentPadding.calculateBottomPadding()
+                        )
                     ) {
                         items(10) {
                             ShimmerArticleCard()
@@ -270,7 +276,9 @@ fun SearchScreen(
                     // Results list
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = contentPadding
+                        contentPadding = PaddingValues(
+                            bottom = contentPadding.calculateBottomPadding()
+                        )
                     ) {
                         items(
                             count = lazyPagingItems.itemCount

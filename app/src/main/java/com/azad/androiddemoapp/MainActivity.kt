@@ -76,54 +76,18 @@ fun MainAppScreen(
         Screen.Profile
     )
 
+    val showBottomBar = currentDestination?.route == null || currentDestination?.route in items.map { it.route }
+
     if (isLargeScreen) {
         // Tablet / Large screen layout with NavigationRail
         Row(modifier = Modifier.fillMaxSize()) {
-            NavigationRail(
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                items.forEach { screen ->
-                    val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-                    NavigationRailItem(
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = { Icon(imageVector = screen.icon, contentDescription = screen.title) },
-                        label = { Text(screen.title) }
-                    )
-                }
-            }
-
-            Scaffold(
-                snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-                modifier = Modifier.weight(1f)
-            ) { innerPadding ->
-                NavGraph(
-                    navController = navController,
-                    onArticleClick = { article ->
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar("Opening: ${article.title}")
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize().padding(innerPadding)
-                )
-            }
-        }
-    } else {
-        // Phone layout with Bottom Navigation Bar
-        Scaffold(
-            bottomBar = {
-                NavigationBar {
+            if (showBottomBar) {
+                NavigationRail(
+                    modifier = Modifier.fillMaxHeight()
+                ) {
                     items.forEach { screen ->
                         val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-                        NavigationBarItem(
+                        NavigationRailItem(
                             selected = selected,
                             onClick = {
                                 navController.navigate(screen.route) {
@@ -139,6 +103,46 @@ fun MainAppScreen(
                         )
                     }
                 }
+            }
+
+            Scaffold(
+                snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                modifier = Modifier.weight(1f)
+            ) { innerPadding ->
+                NavGraph(
+                    navController = navController,
+                    onArticleClick = { article ->
+                        navController.navigate(Screen.NewsDetail.createRoute(article))
+                    },
+                    modifier = Modifier.fillMaxSize().padding(innerPadding)
+                )
+            }
+        }
+    } else {
+        // Phone layout with Bottom Navigation Bar
+        Scaffold(
+            bottomBar = {
+                if (showBottomBar) {
+                    NavigationBar {
+                        items.forEach { screen ->
+                            val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+                            NavigationBarItem(
+                                selected = selected,
+                                onClick = {
+                                    navController.navigate(screen.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = { Icon(imageVector = screen.icon, contentDescription = screen.title) },
+                                label = { Text(screen.title) }
+                            )
+                        }
+                    }
+                }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             modifier = Modifier.fillMaxSize()
@@ -146,9 +150,7 @@ fun MainAppScreen(
             NavGraph(
                 navController = navController,
                 onArticleClick = { article ->
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar("Opening: ${article.title}")
-                    }
+                    navController.navigate(Screen.NewsDetail.createRoute(article))
                 },
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = innerPadding

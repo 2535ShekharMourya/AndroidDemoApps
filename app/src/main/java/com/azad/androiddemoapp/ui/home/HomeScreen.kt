@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,7 +44,11 @@ fun HomeScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+    ) {
         // Scrolling TabRow for Categories
         ScrollableTabRow(
             selectedTabIndex = selectedCategory.ordinal,
@@ -84,7 +89,9 @@ fun HomeScreen(
                 // Skeleton loading state
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = contentPadding
+                    contentPadding = PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding()
+                    )
                 ) {
                     items(10) {
                         ShimmerArticleCard()
@@ -101,7 +108,9 @@ fun HomeScreen(
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = contentPadding
+                    contentPadding = PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding()
+                    )
                 ) {
                     items(
                         count = lazyPagingItems.itemCount
