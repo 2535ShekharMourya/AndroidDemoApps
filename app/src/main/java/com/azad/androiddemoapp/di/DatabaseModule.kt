@@ -3,6 +3,7 @@ package com.azad.androiddemoapp.di
 import android.content.Context
 import androidx.room.Room
 import com.azad.androiddemoapp.data.local.ShoppingDatabase
+import com.azad.androiddemoapp.data.local.dao.CartDao
 import com.azad.androiddemoapp.data.local.dao.FavoriteDao
 import com.azad.androiddemoapp.data.local.dao.ProductDao
 import com.azad.androiddemoapp.data.local.dao.RemoteKeyDao
@@ -42,4 +43,7 @@ object DatabaseModule {
 
     @Provides
     fun provideRemoteKeyDao(db: ShoppingDatabase): RemoteKeyDao = db.remoteKeyDao()
+
+    @Provides
+    fun provideCartDao(db: ShoppingDatabase): CartDao = db.cartDao()
 }

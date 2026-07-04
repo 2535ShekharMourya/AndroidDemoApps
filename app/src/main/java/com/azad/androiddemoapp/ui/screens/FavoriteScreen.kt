@@ -1,6 +1,7 @@
 package com.azad.androiddemoapp.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +29,7 @@ import com.azad.androiddemoapp.ui.viewmodel.FavoriteViewModel
 
 @Composable
 fun FavoriteScreen(
+    onNavigateToProductDetail: (Int) -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -91,7 +93,8 @@ fun FavoriteScreen(
                         isFavorite = true,
                         onFavoriteClick = {
                             viewModel.removeFavorite(favorite.id, favorite.title)
-                        }
+                        },
+                        modifier = Modifier.clickable { onNavigateToProductDetail(favorite.id) }
                     )
                 }
             }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.azad.androiddemoapp.data.local.entity.CartEntity
 import com.azad.androiddemoapp.data.local.entity.FavoriteEntity
 import com.azad.androiddemoapp.data.local.entity.ProductEntity
 import com.azad.androiddemoapp.data.remote.model.ProductDto
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -93,14 +95,13 @@ class HomeViewModel @Inject constructor(
 
     fun toggleFavorite(product: ProductEntity) {
         viewModelScope.launch {
-            repository.isFavorite(product.id).collect { isFav ->
-                if (isFav) {
-                    repository.removeFavorite(product.id)
-                    _snackbarMessage.send("${product.title} removed from favorites")
-                } else {
-                    repository.addFavorite(product)
-                    _snackbarMessage.send("${product.title} added to favorites")
-                }
+            val isFav = repository.isFavorite(product.id).first()
+            if (isFav) {
+                repository.removeFavorite(product.id)
+                _snackbarMessage.send("${product.title} removed from favorites")
+            } else {
+                repository.addFavorite(product)
+                _snackbarMessage.send("${product.title} added to favorites")
             }
         }
     }
@@ -178,14 +179,13 @@ class SearchViewModel @Inject constructor(
                 brand = productDto.brand,
                 thumbnail = productDto.thumbnail
             )
-            repository.isFavorite(productDto.id).collect { isFav ->
-                if (isFav) {
-                    repository.removeFavorite(productDto.id)
-                    _snackbarMessage.send("${productDto.title} removed from favorites")
-                } else {
-                    repository.addFavorite(productEntity)
-                    _snackbarMessage.send("${productDto.title} added to favorites")
-                }
+            val isFav = repository.isFavorite(productDto.id).first()
+            if (isFav) {
+                repository.removeFavorite(productDto.id)
+                _snackbarMessage.send("${productDto.title} removed from favorites")
+            } else {
+                repository.addFavorite(productEntity)
+                _snackbarMessage.send("${productDto.title} added to favorites")
             }
         }
     }
@@ -211,6 +211,96 @@ class FavoriteViewModel @Inject constructor(
 }
 
 @HiltViewModel
+class ProductDetailViewModel @Inject constructor(
+    private val repository: ShoppingRepository
+) : ViewModel() {
+
+    private val _productState = MutableStateFlow<UiState<ProductEntity>>(UiState.Idle)
+    val productState: StateFlow<UiState<ProductEntity>> = _productState.asStateFlow()
+
+    private val _snackbarMessage = Channel<String>(Channel.BUFFERED)
+    val snackbarMessage = _snackbarMessage.receiveAsFlow()
+
+    fun getProductDetail(productId: Int) {
+        viewModelScope.launch {
+            _productState.value = UiState.Loading
+            when (val resource = repository.getProductById(productId)) {
+                is Resource.Success -> {
+                    _productState.value = UiState.Success(resource.data)
+                }
+                is Resource.Error -> {
+                    val errorType = when (resource.message) {
+                        "No internet connection." -> ErrorType.NoInternet
+                        "Request timed out. Please try again." -> ErrorType.Timeout
+                        else -> ErrorType.ServerError
+                    }
+                    _productState.value = UiState.Error(errorType, resource.message)
+                }
+                Resource.Loading -> {
+                    _productState.value = UiState.Loading
+                }
+            }
+        }
+    }
+
+    fun isProductFavorite(productId: Int): Flow<Boolean> {
+        return repository.isFavorite(productId)
+    }
+
+    fun toggleFavorite(product: ProductEntity) {
+        viewModelScope.launch {
+            val isFav = repository.isFavorite(product.id).first()
+            if (isFav) {
+                repository.removeFavorite(product.id)
+                _snackbarMessage.send("${product.title} removed from favorites")
+            } else {
+                repository.addFavorite(product)
+                _snackbarMessage.send("${product.title} added to favorites")
+            }
+        }
+    }
+
+    fun addToCart(product: ProductEntity) {
+        viewModelScope.launch {
+            repository.addToCart(product)
+            _snackbarMessage.send("${product.title} added to cart")
+        }
+    }
+}
+
+@HiltViewModel
+class CartViewModel @Inject constructor(
+    private val repository: ShoppingRepository
+) : ViewModel() {
+
+    val cartItems: StateFlow<List<CartEntity>> = repository.getCartItems()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _snackbarMessage = Channel<String>(Channel.BUFFERED)
+    val snackbarMessage = _snackbarMessage.receiveAsFlow()
+
+    fun updateQuantity(productId: Int, newQuantity: Int) {
+        viewModelScope.launch {
+            repository.updateCartQuantity(productId, newQuantity)
+        }
+    }
+
+    fun removeFromCart(productId: Int, title: String) {
+        viewModelScope.launch {
+            repository.removeFromCart(productId)
+            _snackbarMessage.send("$title removed from cart")
+        }
+    }
+
+    fun clearCart() {
+        viewModelScope.launch {
+            repository.clearCart()
+            _snackbarMessage.send("Cart cleared")
+        }
+    }
+}
+
+@HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val repository: ShoppingRepository,
     application: Application
@@ -223,6 +313,12 @@ class ProfileViewModel @Inject constructor(
 
     private val _snackbarMessage = Channel<String>(Channel.BUFFERED)
     val snackbarMessage = _snackbarMessage.receiveAsFlow()
+
+    val favoritesState: StateFlow<List<FavoriteEntity>> = repository.getFavorites()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val cartState: StateFlow<List<CartEntity>> = repository.getCartItems()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun updateTheme(theme: String) {
         _themeState.value = theme

@@ -59,6 +59,7 @@ import com.azad.androiddemoapp.util.UiState
 @Composable
 fun HomeScreen(
     onNavigateToSearch: () -> Unit,
+    onNavigateToProductDetail: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -241,7 +242,8 @@ fun HomeScreen(
                             ProductItem(
                                 product = product,
                                 isFavorite = isFavorite,
-                                onFavoriteClick = { viewModel.toggleFavorite(product) }
+                                onFavoriteClick = { viewModel.toggleFavorite(product) },
+                                modifier = Modifier.clickable { onNavigateToProductDetail(product.id) }
                             )
                         }
                     }

@@ -19,6 +19,9 @@ interface ProductDao {
     @Query("SELECT * FROM products WHERE category = :category")
     fun pagingSourceByCategory(category: String): PagingSource<Int, ProductEntity>
 
+    @Query("SELECT * FROM products WHERE id = :id")
+    suspend fun getProductById(id: Int): ProductEntity?
+
     @Query("DELETE FROM products")
     suspend fun clearAll()
 }

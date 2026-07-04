@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -33,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.azad.androiddemoapp.ui.viewmodel.CartViewModel
 import com.azad.androiddemoapp.ui.viewmodel.HomeViewModel
 import com.azad.androiddemoapp.ui.viewmodel.ProfileViewModel
 import com.azad.androiddemoapp.ui.viewmodel.SearchViewModel
@@ -41,6 +43,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Home : Screen("home", "Home", Icons.Default.Home)
     object Search : Screen("search", "Search", Icons.Default.Search)
     object Favorite : Screen("favorite", "Favorite", Icons.Default.Favorite)
+    object Cart : Screen("cart", "Cart", Icons.Default.ShoppingCart)
     object Profile : Screen("profile", "Profile", Icons.Default.Person)
 }
 
@@ -50,6 +53,7 @@ fun MainScreen(
     navController: NavHostController = rememberNavController(),
     homeViewModel: HomeViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel(),
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val configuration = LocalConfiguration.current
@@ -69,6 +73,12 @@ fun MainScreen(
     }
 
     LaunchedEffect(key1 = true) {
+        cartViewModel.snackbarMessage.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
         profileViewModel.snackbarMessage.collect { message ->
             snackbarHostState.showSnackbar(message)
         }
@@ -78,6 +88,7 @@ fun MainScreen(
         Screen.Home,
         Screen.Search,
         Screen.Favorite,
+        Screen.Cart,
         Screen.Profile
     )
 
@@ -152,21 +163,49 @@ fun MainScreen(
                     composable(Screen.Home.route) {
                         HomeScreen(
                             onNavigateToSearch = { onTabSelected(Screen.Search) },
+                            onNavigateToProductDetail = { productId ->
+                                navController.navigate("product_detail/$productId")
+                            },
                             viewModel = homeViewModel
                         )
                     }
                     composable(Screen.Search.route) {
                         SearchScreen(
                             onNavigateBack = { navController.popBackStack() },
+                            onNavigateToProductDetail = { productId ->
+                                navController.navigate("product_detail/$productId")
+                            },
                             viewModel = searchViewModel
                         )
                     }
                     composable(Screen.Favorite.route) {
-                        FavoriteScreen()
+                        FavoriteScreen(
+                            onNavigateToProductDetail = { productId ->
+                                navController.navigate("product_detail/$productId")
+                            }
+                        )
+                    }
+                    composable(Screen.Cart.route) {
+                        CartScreen(
+                            onNavigateToProductDetail = { productId ->
+                                navController.navigate("product_detail/$productId")
+                            },
+                            viewModel = cartViewModel
+                        )
                     }
                     composable(Screen.Profile.route) {
                         ProfileScreen(
+                            onNavigateToProductDetail = { productId ->
+                                navController.navigate("product_detail/$productId")
+                            },
                             viewModel = profileViewModel
+                        )
+                    }
+                    composable("product_detail/{productId}") { backStackEntry ->
+                        val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull() ?: 0
+                        ProductDetailScreen(
+                            productId = productId,
+                            onNavigateBack = { navController.popBackStack() }
                         )
                     }
                 }

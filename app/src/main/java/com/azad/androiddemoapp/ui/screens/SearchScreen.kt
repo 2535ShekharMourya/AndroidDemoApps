@@ -74,6 +74,7 @@ import java.util.Locale
 @Composable
 fun SearchScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToProductDetail: (Int) -> Unit,
     viewModel: SearchViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -338,7 +339,8 @@ fun SearchScreen(
                                 isFavorite = isFavorite,
                                 onFavoriteClick = {
                                     viewModel.toggleFavoriteFromDto(productDto)
-                                }
+                                },
+                                modifier = Modifier.clickable { onNavigateToProductDetail(productDto.id) }
                             )
                         }
                     }

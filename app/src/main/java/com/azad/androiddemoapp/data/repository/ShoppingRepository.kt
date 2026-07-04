@@ -1,6 +1,7 @@
 package com.azad.androiddemoapp.data.repository
 
 import androidx.paging.PagingData
+import com.azad.androiddemoapp.data.local.entity.CartEntity
 import com.azad.androiddemoapp.data.local.entity.FavoriteEntity
 import com.azad.androiddemoapp.data.local.entity.ProductEntity
 import com.azad.androiddemoapp.data.local.entity.SearchHistoryEntity
@@ -25,6 +26,17 @@ interface ShoppingRepository {
     suspend fun addSearchQuery(query: String)
     suspend fun deleteSearchQuery(query: String)
     suspend fun clearSearchHistory()
+
+    // Cart operations
+    fun getCartItems(): Flow<List<CartEntity>>
+    suspend fun addToCart(product: ProductEntity)
+    suspend fun addToCart(product: ProductDto)
+    suspend fun updateCartQuantity(productId: Int, quantity: Int)
+    suspend fun removeFromCart(productId: Int)
+    suspend fun clearCart()
+
+    // Product Detail query
+    suspend fun getProductById(productId: Int): Resource<ProductEntity>
 
     // Cache clearing
     suspend fun clearCachedData()

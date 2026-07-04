@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.azad.androiddemoapp.data.local.ShoppingDatabase
+import com.azad.androiddemoapp.data.local.entity.CartEntity
 import com.azad.androiddemoapp.data.local.entity.FavoriteEntity
 import com.azad.androiddemoapp.data.local.entity.ProductEntity
 import com.azad.androiddemoapp.data.local.entity.SearchHistoryEntity
@@ -138,6 +139,101 @@ class ShoppingRepositoryImpl @Inject constructor(
         database.productDao().clearAll()
         database.remoteKeyDao().clearRemoteKeys()
         database.searchHistoryDao().clearHistory()
+    }
+
+    override fun getCartItems(): Flow<List<CartEntity>> {
+        return database.cartDao().getCartItemsFlow()
+    }
+
+    override suspend fun addToCart(product: ProductEntity) {
+        val existing = database.cartDao().getCartItemById(product.id)
+        if (existing != null) {
+            database.cartDao().insertOrUpdateCartItem(existing.copy(quantity = existing.quantity + 1))
+        } else {
+            database.cartDao().insertOrUpdateCartItem(
+                CartEntity(
+                    id = product.id,
+                    title = product.title,
+                    price = product.price,
+                    discountPercentage = product.discountPercentage,
+                    thumbnail = product.thumbnail,
+                    quantity = 1
+                )
+            )
+        }
+    }
+
+    override suspend fun addToCart(product: ProductDto) {
+        val existing = database.cartDao().getCartItemById(product.id)
+        if (existing != null) {
+            database.cartDao().insertOrUpdateCartItem(existing.copy(quantity = existing.quantity + 1))
+        } else {
+            database.cartDao().insertOrUpdateCartItem(
+                CartEntity(
+                    id = product.id,
+                    title = product.title,
+                    price = product.price,
+                    discountPercentage = product.discountPercentage,
+                    thumbnail = product.thumbnail,
+                    quantity = 1
+                )
+            )
+        }
+    }
+
+    override suspend fun updateCartQuantity(productId: Int, quantity: Int) {
+        val existing = database.cartDao().getCartItemById(productId)
+        if (existing != null) {
+            if (quantity > 0) {
+                database.cartDao().insertOrUpdateCartItem(existing.copy(quantity = quantity))
+            } else {
+                database.cartDao().deleteCartItemById(productId)
+            }
+        }
+    }
+
+    override suspend fun removeFromCart(productId: Int) {
+        database.cartDao().deleteCartItemById(productId)
+    }
+
+    override suspend fun clearCart() {
+        database.cartDao().clearCart()
+    }
+
+    override suspend fun getProductById(productId: Int): Resource<ProductEntity> {
+        // Try local Room cache first
+        val localProduct = database.productDao().getProductById(productId)
+        if (localProduct != null) {
+            return Resource.Success(localProduct)
+        }
+
+        // Fetch from Retrofit if not cached
+        return try {
+            val remoteDto = apiService.getProductById(productId)
+            val entity = ProductEntity(
+                id = remoteDto.id,
+                title = remoteDto.title,
+                description = remoteDto.description,
+                category = remoteDto.category,
+                price = remoteDto.price,
+                discountPercentage = remoteDto.discountPercentage,
+                rating = remoteDto.rating,
+                stock = remoteDto.stock,
+                brand = remoteDto.brand,
+                thumbnail = remoteDto.thumbnail
+            )
+            // Cache it in DB
+            database.productDao().insertAll(listOf(entity))
+            Resource.Success(entity)
+        } catch (e: SocketTimeoutException) {
+            Resource.Error(e, "Request timed out. Please try again.")
+        } catch (e: IOException) {
+            Resource.Error(e, "No internet connection.")
+        } catch (e: HttpException) {
+            Resource.Error(e, "Server error: ${e.code()}")
+        } catch (e: Exception) {
+            Resource.Error(e, "An unknown error occurred.")
+        }
     }
 }
 

@@ -29,4 +29,9 @@ interface DummyJsonService {
         @Query("limit") limit: Int,
         @Query("skip") skip: Int
     ): ProductResponse
+
+    @GET("products/{id}")
+    suspend fun getProductById(
+        @Path("id") id: Int
+    ): com.azad.androiddemoapp.data.remote.model.ProductDto
 }
