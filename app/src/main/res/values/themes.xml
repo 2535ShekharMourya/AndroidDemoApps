@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.AndroidDemoApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Theme only for AppCompat Activity -->
+    <style name="Theme.MyApp.AppCompat" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize if needed -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+    </style>
 </resources>

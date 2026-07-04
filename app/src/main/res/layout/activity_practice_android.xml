@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+android:gravity="center"
+    android:layout_height="match_parent"
+    tools:context=".PracticeAndroidActivity">
+    <TextView
+        android:id="@+id/txt_flow"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:text="Colllect Flow">
+
+    </TextView>
+    <TextView
+        android:id="@+id/txt_stateflow"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:text="Colllect StateFlow">
+
+    </TextView>
+    <TextView
+        android:id="@+id/txt_SharedFlow"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:text="Colllect SharedFlow"/>
+    <TextView
+        android:id="@+id/txt_livedata"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:text="Colllect livedata">
+
+    </TextView>
+    <TextView
+        android:id="@+id/txt_start"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:background="@color/cardview_shadow_start_color"
+        android:layout_height="wrap_content"
+        android:text="Start collecting">
+
+    </TextView>
+
+
+</LinearLayout>
