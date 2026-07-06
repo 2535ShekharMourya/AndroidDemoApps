@@ -22,86 +22,86 @@ This repository serves as my personal Android learning journey.
 
 ## Kotlin
 
-- [ ] Basics
-- [ ] OOP
-- [ ] Extension Functions
-- [ ] Higher-Order Functions
-- [ ] Scope Functions
+- [x] Basics
+- [x] OOP
+- [x] Extension Functions
+- [x] Higher-Order Functions
+- [x] Scope Functions
 - [ ] Delegation
-- [ ] Coroutines
-- [ ] Flow
-- [ ] StateFlow
-- [ ] SharedFlow
+- [x] Coroutines
+- [x] Flow
+- [x] StateFlow
+- [x] SharedFlow
 
 ---
 
 ## Android Fundamentals
 
-- [ ] Activities
-- [ ] Fragments
-- [ ] Intents
-- [ ] Services
+- [x] Activities
+- [x] Fragments
+- [x] Intents
+- [x] Services
 - [ ] Broadcast Receivers
-- [ ] Content Providers
-- [ ] Permissions
+- [x] Content Providers
+- [x] Permissions
 - [ ] Notifications
-- [ ] WorkManager
+- [x] WorkManager
 - [ ] AlarmManager
 
 ---
 
 ## Jetpack Components
 
-- [ ] ViewModel
-- [ ] LiveData
-- [ ] Navigation Component
-- [ ] Room Database
+- [x] ViewModel
+- [x] LiveData
+- [x] Navigation Component
+- [x] Room Database
 - [ ] DataStore
 - [ ] Paging 3
-- [ ] Hilt
-- [ ] Compose
-- [ ] Lifecycle
+- [x] Hilt
+- [x] Compose
+- [x] Lifecycle
 
 ---
 
 ## Networking
 
-- [ ] Retrofit
-- [ ] OkHttp
+- [x] Retrofit
+- [x] OkHttp
 - [ ] Ktor
-- [ ] REST APIs
+- [x] REST APIs
 - [ ] WebSockets
 
 ---
 
 ## Firebase
 
-- [ ] Authentication
+- [x] Authentication
 - [ ] Firestore
-- [ ] Realtime Database
+- [x] Realtime Database
 - [ ] Cloud Storage
 - [ ] Cloud Messaging
-- [ ] Analytics
-- [ ] Crashlytics
+- [x] Analytics
+- [x] Crashlytics
 
 ---
 
 ## Architecture
 
-- [ ] MVVM
-- [ ] Repository Pattern
+- [x] MVVM
+- [x] Repository Pattern
 - [ ] Clean Architecture
-- [ ] Dependency Injection
-- [ ] Modularization
+- [x] Dependency Injection
+- [x] Modularization
 
 ---
 
 ## Image & Media
 
-- [ ] Glide
-- [ ] Coil
-- [ ] Picasso
-- [ ] ExoPlayer
+- [x] Glide
+- [x] Coil
+- [x] Picasso
+- [x] ExoPlayer
 - [ ] CameraX
 
 ---
@@ -109,15 +109,15 @@ This repository serves as my personal Android learning journey.
 ## Location & Maps
 
 - [ ] Google Maps
-- [ ] Fused Location Provider
+- [x ] Fused Location Provider
 - [ ] Geofencing
 
 ---
 
 ## Background Processing
 
-- [ ] Coroutines
-- [ ] Flow
+- [ x] Coroutines
+- [ x] Flow
 - [ ] WorkManager
 - [ ] Foreground Service
 - [ ] Background Service
