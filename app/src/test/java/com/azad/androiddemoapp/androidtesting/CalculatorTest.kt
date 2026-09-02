@@ -1,4 +1,4 @@
-package com.azad.androiddemoapp.utils
+package com.azad.androiddemoapp.androidtesting
 
 import org.junit.Assert.*
 import org.junit.Test
@@ -33,5 +33,31 @@ class CalculatorTest {
         // Assert
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun checkEven() {
+        // Arrange
+        val calculator = Calculator()
+        val a = 10
+        val expected = true
+        // Act
+        val actual = calculator.checkEven(a)
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun checkOdd() {
+        // Arrange
+        val calculator = Calculator()
+        val a = 11
+        val expected = true
+        // Act
+        val actual = calculator.checkOdd(a)
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+
 
 }

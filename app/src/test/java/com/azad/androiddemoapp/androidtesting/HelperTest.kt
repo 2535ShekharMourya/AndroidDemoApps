@@ -1,4 +1,4 @@
-package com.azad.androiddemoapp.utils
+package com.azad.androiddemoapp.androidtesting
 
 import org.junit.After
 import org.junit.Assert.*

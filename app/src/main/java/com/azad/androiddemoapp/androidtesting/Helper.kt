@@ -1,4 +1,4 @@
-package com.azad.androiddemoapp.utils
+package com.azad.androiddemoapp.androidtesting
 
 class Helper {
     fun isPalindrome(str: String): Boolean {
