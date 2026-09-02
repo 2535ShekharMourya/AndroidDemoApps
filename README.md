@@ -118,7 +118,7 @@ This repository serves as my personal Android learning journey.
 
 - [✓] Coroutines
 - [✓] Flow
-- [ ] WorkManager
+- [] WorkManager
 - [ ] Foreground Service
 - [ ] Background Service
 
@@ -126,7 +126,7 @@ This repository serves as my personal Android learning journey.
 
 ## Testing
 
-- [ ] JUnit
+- [✓] JUnit
 - [ ] Mockito
 - [ ] Espresso
 
