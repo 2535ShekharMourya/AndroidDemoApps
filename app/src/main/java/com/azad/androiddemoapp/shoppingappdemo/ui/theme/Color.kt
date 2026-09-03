@@ -1,4 +1,4 @@
-package com.azad.androiddemoapp.ui.theme
+package com.azad.androiddemoapp.shoppingappdemo.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

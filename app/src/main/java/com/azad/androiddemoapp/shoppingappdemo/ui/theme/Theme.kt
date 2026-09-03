@@ -1,6 +1,5 @@
-package com.azad.androiddemoapp.ui.theme
+package com.azad.androiddemoapp.shoppingappdemo.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
