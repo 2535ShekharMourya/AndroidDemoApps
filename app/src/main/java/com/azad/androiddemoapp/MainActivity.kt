@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.azad.androiddemoapp.ui.screens.MainScreen
-import com.azad.androiddemoapp.ui.theme.AndroidDemoAppTheme
-import com.azad.androiddemoapp.ui.viewmodel.ProfileViewModel
+import com.azad.androiddemoapp.shoppingappdemo.ui.screens.MainScreen
+import com.azad.androiddemoapp.shoppingappdemo.ui.theme.AndroidDemoAppTheme
+import com.azad.androiddemoapp.shoppingappdemo.ui.viewmodel.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
